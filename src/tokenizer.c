@@ -94,7 +94,21 @@ return words;
 }
 
 /* Prints all tokens. */
-void print_tokens(char **tokens);
+void print_tokens(char **tokens){
+  for(int i=0; *(tokens +i) != 0; i++){
+    for(int j=0; *(*(tokens + i)+j) != '\0'; j++){
+      printf("[%c]", *(*(tokens + i)+j));
+    }
+    printf("\n");
+  }
+}
 
 /* Frees all tokens and the vector containing themx. */
-void free_tokens(char **tokens);
+void free_tokens(char **tokens){
+  char**temp=tokens;
+  while(*temp!=NULL);{
+    free(*temp);
+    temp++;
+  }
+  free(tokens);
+}
