@@ -26,37 +26,32 @@ int non_space_char(char c){
 /* Returns a pointer to the first character of the next 
    space-separated word in zero-terminated str.  Return a zero pointer if 
    str does not contain any words. */
-char *word_start(char *s){
-  if(*s == '\0'){
+char *word_start(char *str){
+  if(*str == '\0'){
     return '\0';
   }
 
-  int i = 0;
-  while(space_char(*(s+i))){
-    i+=1;
+  while(space_char(*str)){
+    str++;
   }
-  return s;
+  return str;
 }
 
 /* Returns a pointer terminator char following *word */
 char *word_terminator(char *word){
   int i;
-  for(i=0; *(word + i) != '\0' && non_space_char (*(word + i)) ; i++){
+  while(non_space_char(*word)){
+    word++;
   }
   return word;
 }
 
 /* Counts the number of words in the string argument. */
-int count_words(char *s){
+int count_words(char *str){
   int count = 0;
-  for(int i=0; *(s + i) != '\0'; i++){
-    if(non_space_char(*s)){
-      s = word_terminator(s);
-      count += 1;
-    }
-    else{
-      s = word_start(s);
-    }
+  while(*str != '\0'){
+    str = word_start(str);
+    str = word_terminator(str);
   }
   return count;
 }
@@ -83,7 +78,20 @@ char *copy_str(char *inStr, short len){
      tokens[2] = "string" 
      tokens[3] = 0
 */
-char **tokenize(char* str);
+char **tokenize(char* str){
+  int word_len = count_words(str);
+  char **words = (char **)malloc(sizeof(char*)*(word_len +1));
+  char *temp;
+  for(int i=0; i<word_len; i++){
+    str = word_start(str);
+    temp = word_terminator(str);
+    
+    int str_len = temp - str;
+    words[i] = copy_str(str, str_len);
+    str = temp;
+  }
+return words;
+}
 
 /* Prints all tokens. */
 void print_tokens(char **tokens);
