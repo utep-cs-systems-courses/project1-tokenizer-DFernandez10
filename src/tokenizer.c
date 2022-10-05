@@ -28,7 +28,7 @@ int non_space_char(char c){
    str does not contain any words. */
 char *word_start(char *str){
   if(*str == '\0'){
-    return '\0';
+    return 0;
   }
 
   while(space_char(*str)){
@@ -39,7 +39,6 @@ char *word_start(char *str){
 
 /* Returns a pointer terminator char following *word */
 char *word_terminator(char *word){
-  int i;
   while(non_space_char(*word)){
     word++;
   }
@@ -52,6 +51,7 @@ int count_words(char *str){
   while(*str != '\0'){
     str = word_start(str);
     str = word_terminator(str);
+    count++;
   }
   return count;
 }
@@ -59,19 +59,17 @@ int count_words(char *str){
 /* Returns a fresly allocated new zero-terminated string 
    containing <len> chars from <inStr> */
 char *copy_str(char *inStr, short len){
-  char *new_str;
-  new_str =(char *)malloc(sizeof(char) * (len + 1));
+  char *new_str = (char*)malloc(sizeof(char) * (len+1));
   int i;
   for( i = 0; i < len ; i++){
-    *(new_str + i) = *(inStr + i); 
+    *(new_str+i)=*(inStr+i); 
   }
-  *(new_str + i) = '\0';
+  *(new_str+i) = '\0';
   return new_str;
 }
 
 /* Returns a freshly allocated zero-terminated vector of freshly allocated 
    space-separated tokens from zero-terminated str.
-
    For example, tokenize("hello world string") would result in:
      tokens[0] = "hello"
      tokens[1] = "world"
@@ -80,26 +78,23 @@ char *copy_str(char *inStr, short len){
 */
 char **tokenize(char* str){
   int word_len = count_words(str);
-  char **words = (char **)malloc(sizeof(char*)*(word_len +1));
-  char *temp;
-  for(int i=0; i<word_len; i++){
-    str = word_start(str);
-    temp = word_terminator(str);
-    
-    int str_len = temp - str;
-    words[i] = copy_str(str, str_len);
-    str = temp;
+  char **words = (char**)malloc((word_len+1)*sizeof(char*));
+
+  int i =0;
+  for(i=0; i<word_len; i++){
+    char* start = word_start(str);
+    str = word_terminator(start);
+    words[i] = copy_str(start, str - start);
   }
-return words;
+  words[i] = '\0';
+  return words;
 }
 
 /* Prints all tokens. */
 void print_tokens(char **tokens){
-  for(int i=0; *(tokens +i) != 0; i++){
-    for(int j=0; *(*(tokens + i)+j) != '\0'; j++){
-      printf("[%c]", *(*(tokens + i)+j));
-    }
-    printf("\n");
+  while(**tokens != '\0'){
+    printf("%s\n",tokens);
+    tokens++;
   }
 }
 
