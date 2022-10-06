@@ -7,7 +7,7 @@
    ('\t' or ' ').  
    Zero terminators are not printable (therefore false) */
 int space_char(char c){
-  if(c == ' ' || c == '\t' || '\n'){
+  if(c == ' ' || c == '\t'){
     return 1;
   }
   return 0;
@@ -92,9 +92,9 @@ char **tokenize(char* str){
 
 /* Prints all tokens. */
 void print_tokens(char **tokens){
-  while(**tokens != '\0'){
-    printf("%s\n",tokens);
-    tokens++;
+  int i;
+  for (i=0; tokens[i] != 0; i++){
+    printf("\nTokens[%d] : %s\n", i,tokens[i]);
   }
 }
 
