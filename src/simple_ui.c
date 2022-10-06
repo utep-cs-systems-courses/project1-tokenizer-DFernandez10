@@ -1,33 +1,39 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include "tokenizer.h"
+#include "history.h"
 
 int main(){
 
-
-  // need to create a list for history
-  printf(">");
+ 
+  char userInput[100];
+  List *hist = init_history();
   while(1){
-    printf("$");
-    char str[256];
-    gets(str);
-    if(str[1] == '\0'){
-      if(str[0] == 'q'){
+    printf("h= history, t=tokenize, q=quit");
+    printf("== ");
+    fgets(userInput, 95, stdin);
+    if(userInput[0] == 'h'){
+      print_history(hist);
+      printf("clear history? y/n");
+      printf("==");
+      fgets(userInput, 95, stdin);
+      if(userInput[0]=='y'){
+	free_history(hist);
 	break;
-      }else if(str[0] == 'h'){
-	printf("h pressed");
       }
-      continue;
-    }else if(str[0] == '!' && str[2] == '\0'){
-     printf("meh");
-     continue;
-    }else{
-      char **tokens = tokenize(str);
-      print_tokens(tokens);
-      free_tokens(tokens);
     }
-    // need to use history methods with new list
+    if(userInput[0]=='q'){
+      break;
+    }
+    if(userInput[0]=='t'){
+      printf("Type string: \n");
+      printf(">");
+      fgets(userInput, 95, stdin);
+      char **tokens = tokenize(userInput);
+      print_tokens(tokens);
+      //add_history(hist, userInput);
+      // free_tokens(tokens);
+    }
   }
-  //same as last comment
   return 0;
-}
+}	    
