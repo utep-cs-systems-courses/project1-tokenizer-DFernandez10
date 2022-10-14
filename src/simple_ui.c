@@ -3,37 +3,38 @@
 #include "tokenizer.h"
 #include "history.h"
 
-int main(){
+#define MAX 400
 
- 
-  char userInput[100];
-  List *hist = init_history();
-  while(1){
-    printf("h= history, t=tokenize, q=quit");
-    printf("== ");
-    fgets(userInput, 95, stdin);
-    if(userInput[0] == 'h'){
-      print_history(hist);
-      printf("clear history? y/n");
-      printf("==");
-      fgets(userInput, 95, stdin);
-      if(userInput[0]=='y'){
-	free_history(hist);
-	break;
-      }
+int main(){
+  char userInput[MAX];
+  char** tokens;
+  List *history = init_history();
+
+  printf("> h= history, != specific history, q= quit");
+  
+  while(userInput[0] != 'q' && userInput[0]){
+    putchar('>');
+    fgets(userInput,MAX, stdin);
+
+    printf("String typed: %s", userInput);
+
+    tokens = tokenize(userInput);
+    print_tokens(tokens);
+    add_history(history, userInput);
+    
+    if (userInput[0] == 'h'){
+      print_history(history);
     }
-    if(userInput[0]=='q'){
-      break;
-    }
-    if(userInput[0]=='t'){
-      printf("Type string: \n");
-      printf(">");
-      fgets(userInput, 95, stdin);
-      char **tokens = tokenize(userInput);
+    
+    else  if (userInput[0] == '!'){
+      char *h = get_history(history,atoi(userInput+1));
+      char **tokens = tokenize(h);
+      printf("History: %s\n", h);
+      printf("Tokenized history:\n");
+      
       print_tokens(tokens);
-      //add_history(hist, userInput);
-      // free_tokens(tokens);
+      free_tokens(tokens);
     }
   }
   return 0;
-}	    
+}
